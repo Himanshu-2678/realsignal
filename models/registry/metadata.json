@@ -1,0 +1,7 @@
+{
+  "model_name": "Isolation Forest",
+  "model_version": "v1",
+  "training_samples": 500,
+  "feature_count": 4,
+  "status": "active"
+}
