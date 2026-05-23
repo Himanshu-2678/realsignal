@@ -1,0 +1,21 @@
+MODEL_PATH = (
+    "models/registry/isolation_forest_v1.pkl"
+)
+
+MODEL_VERSION = "v1"
+
+N_ESTIMATORS = 100
+
+CONTAMINATION = 0.05
+
+STREAM_DELAY_SECONDS = 1
+
+FRAUD_PROBABILITY = 0.05
+
+MAX_TRANSACTION_HISTORY = 100
+
+KAFKA_TOPIC = "transactions"
+
+DLQ_TOPIC = "dead_letter_queue" 
+
+KAFKA_BOOTSTRAP_SERVERS = "localhost:9092"
