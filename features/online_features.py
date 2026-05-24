@@ -2,7 +2,7 @@ from collections import defaultdict, deque
 from datetime import datetime, timezone, timedelta
 
 customer_transaction_history = defaultdict(
-    lambda: deque(maxlen=100)
+    lambda: deque(maxlen=20)
 )
 
 def update_customer_history(event):
@@ -41,7 +41,7 @@ def calculate_transaction_velocity(customer_id):
 def calculate_average_transaction_amount(customer_id):
 
     recent_transactions = get_recent_transactions(
-        customer_id
+        customer_id, window_minutes=0.05
     )
 
     if not recent_transactions:
@@ -61,7 +61,7 @@ def calculate_average_transaction_amount(customer_id):
 def calculate_merchant_diversity(customer_id):
 
     recent_transactions = get_recent_transactions(
-        customer_id
+        customer_id, window_minutes=0.05
     )
 
     unique_categories = {
