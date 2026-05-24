@@ -85,3 +85,7 @@ dist/
 # -------------------------
 
 docker-data/
+
+mlruns/
+mlflow_tracking/
+*.log
