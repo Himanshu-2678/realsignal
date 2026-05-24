@@ -12,7 +12,9 @@ from settings import (
 )
 
 from streaming.schemas import TransactionEvent
-
+from services.explainability_service import (
+    generate_anomaly_reasons,
+)
 from services.inference_service import (
     run_inference_pipeline,
 )
@@ -102,9 +104,12 @@ for message in consumer:
 
     if output["prediction"] == "anomaly":
 
-        logger.warning(
-            f"ANOMALY DETECTED: {output}"
-        )
+        anomaly_reasons = (generate_anomaly_reasons(feature_vector))
+
+        output["anomaly_reasons"] = (anomaly_reasons)
+
+        logger.warning(f"ANOMALY DETECTED: {output}")
+
     else:
         logger.info(
             f"Normal transaction: "
