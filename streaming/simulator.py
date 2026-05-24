@@ -109,8 +109,6 @@ def stream_transactions():
             event = generate_normal_transaction(profile)
 
         event_data = event.model_dump(mode="json")
-        # TEMPORARY poison message test
-        event_data["amount"] = "invalid_amount"
-
+        
         yield event_data    
 
