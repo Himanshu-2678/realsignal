@@ -1,0 +1,18 @@
+{
+    "amount": {
+        "psi_score": 2.0361,
+        "status": "significant_drift"
+    },
+    "velocity_1m": {
+        "psi_score": 0.0,
+        "status": "stable"
+    },
+    "avg_amount_1m": {
+        "psi_score": 4.2257,
+        "status": "significant_drift"
+    },
+    "merchant_diversity_1m": {
+        "psi_score": 1.0441,
+        "status": "significant_drift"
+    }
+}
