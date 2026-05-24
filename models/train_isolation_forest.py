@@ -1,114 +1,88 @@
+import joblib
+import mlflow
+import mlflow.sklearn
 import pandas as pd
-import joblib 
 
-from streaming.simulator import stream_transactions
 from sklearn.ensemble import IsolationForest
-
-from settings import (
-    MODEL_PATH,
-    N_ESTIMATORS,
-    CONTAMINATION,
+from sklearn.metrics import (
+    classification_report,
+    confusion_matrix,
+    precision_score,
+    recall_score,
+    f1_score,
+    accuracy_score,
 )
 
-from features.online_features import (
-    update_customer_history,
-    calculate_transaction_velocity,
-    calculate_average_transaction_amount,
-    calculate_merchant_diversity,
-)
+from settings import MODEL_PATH, N_ESTIMATORS, CONTAMINATION
 
-from models.feature_pipeline import (
-    build_feature_vector
-)
+TRAIN_DATASET_PATH = "dataset/processed/transactions_dataset.csv"
+EVAL_DATASET_PATH = "dataset/processed/current_transactions.csv"
 
-dataset = []
-
-stream = stream_transactions()
-
-for _ in range(500):
-
-    event = next(stream)
-    update_customer_history(event)
-
-    velocity_1m = calculate_transaction_velocity(
-        event.customer_id
-    )
-
-    avg_amount_1m = (
-        calculate_average_transaction_amount(
-            event.customer_id
-        )
-    )
-
-    merchant_diversity_1m = (
-        calculate_merchant_diversity(
-            event.customer_id
-        )
-    )
-
-    feature_vector = build_feature_vector(
-        event,
-        velocity_1m,
-        avg_amount_1m,
-        merchant_diversity_1m,
-    )
-
-    feature_vector["is_fraud"] = event.is_fraud
-
-    dataset.append(feature_vector)
-
-
-# converting the dataset into dataframe
-df = pd.DataFrame(dataset)
-
-print(df.head())
-
-print(df.shape)
-
-
-
-"""
-Model Building
-"""
-
-X = df.drop(columns=["is_fraud"])
-
-model = IsolationForest(
-    n_estimators=N_ESTIMATORS,
-    contamination=CONTAMINATION,
-    random_state=42,
-)
-
-model.fit(X)
-
-predictions = model.predict(X)
-
-
-"""
-Isolation Forest outputs: 1 = Normal, -1 = Anomaly
-"""
-
-
-df["anomaly_prediction"] = predictions
-
-df["anomaly_prediction"] = (
-    df["anomaly_prediction"] == -1
-)
-
-fraud_detected = df[
-    (df["is_fraud"] == True)
-    &
-    (df["anomaly_prediction"] == True)
+FEATURE_COLUMNS = [
+    "amount",
+    "velocity_1m",
+    "avg_amount_1m",
+    "merchant_diversity_1m",
 ]
 
-print("\nFraud Transactions Detected:")
-print(len(fraud_detected))
+train_df = pd.read_csv(TRAIN_DATASET_PATH)
+eval_df = pd.read_csv(EVAL_DATASET_PATH)
 
-print("\nTotal Fraud Transactions:")
-print(df["is_fraud"].sum())
+X_train = train_df[FEATURE_COLUMNS]
+X_eval = eval_df[FEATURE_COLUMNS]
+y_true = eval_df["is_fraud"].astype(int)
 
-# saving the model
-joblib.dump(
-    model,
-    MODEL_PATH,
-)
+mlflow.set_experiment("RealSignal-Anomaly-Detection")
+
+with mlflow.start_run():
+    model = IsolationForest(
+        n_estimators=N_ESTIMATORS,
+        contamination=CONTAMINATION,
+        random_state=42,
+    )
+
+    model.fit(X_train)
+
+    predictions = model.predict(X_eval)
+
+    y_pred = [1 if p == -1 else 0 for p in predictions]
+
+    precision = precision_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred)
+    f1 = f1_score(y_true, y_pred)
+    accuracy = accuracy_score(y_true, y_pred)
+
+    report = classification_report(y_true, y_pred)
+    matrix = confusion_matrix(y_true, y_pred)
+
+    print("\nClassification Report:\n")
+    print(report)
+
+    print("\nConfusion Matrix:\n")
+    print(matrix)
+
+    mlflow.log_param("n_estimators", N_ESTIMATORS)
+    mlflow.log_param("contamination", CONTAMINATION)
+
+    mlflow.log_metric("precision", precision)
+    mlflow.log_metric("recall", recall)
+    mlflow.log_metric("f1_score", f1)
+    mlflow.log_metric("accuracy", accuracy)
+
+    with open("evaluation/classification_report.txt", "w") as f:
+        f.write(report)
+
+    with open("evaluation/confusion_matrix.txt", "w") as f:
+        f.write(str(matrix))
+
+    mlflow.log_artifact("evaluation/classification_report.txt")
+    mlflow.log_artifact("evaluation/confusion_matrix.txt")
+
+    if pd.io.common.file_exists("monitoring/drift_report.json"):
+        mlflow.log_artifact("monitoring/drift_report.json")
+
+    joblib.dump(model, MODEL_PATH)
+
+    mlflow.sklearn.log_model(sk_model=model, name="isolation_forest_model",)
+
+    print("\nMLflow tracking completed.")
