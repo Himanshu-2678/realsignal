@@ -6,15 +6,24 @@ from utils.logger import logger
 model = joblib.load(MODEL_PATH)
 logger.info("Isolation Forest model loaded successfully.")
 
+FEATURE_COLUMNS = [
+    "amount",
+    "velocity_1m",
+    "avg_amount_1m",
+    "merchant_diversity_1m",
+]
 def predict_anomaly(feature_vector):
 
     try:
         input_df = pd.DataFrame([feature_vector])
+        input_df = input_df[
+            FEATURE_COLUMNS
+        ]
 
         prediction = model.predict(input_df)[0]
 
-        anomaly_score = model.decision_function(input_df)[0]
-
+        anomaly_score = (model.decision_function(input_df)[0])
+        
         result = {
             "prediction": (
                 "anomaly"
