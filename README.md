@@ -115,6 +115,7 @@ Dead Letter Queue (DLQ) isolates malformed events. Consumer crashes are prevente
 | Backend API | FastAPI |
 | Streaming | Apache Kafka |
 | ML Model | Isolation Forest (scikit-learn) |
+| Deep Learning | AutoEncoder (Pytorch) |
 | Experiment Tracking | MLflow |
 | Frontend | HTML / CSS / JavaScript |
 | Data Processing | Pandas |
