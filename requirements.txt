@@ -92,3 +92,5 @@ wcwidth==0.7.0
 Werkzeug==3.1.8
 yarl==1.24.2
 zipp==4.1.0
+torch
+matplotlib
