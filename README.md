@@ -42,9 +42,7 @@ MLflow Lifecycle Tracking
 
 ## Demo
 
-[![RealSignal Demo](https://img.youtube.com/vi/zqPcyIgDgqU/maxresdefault.jpg)](https://youtu.be/zqPcyIgDgqU)
-
-*Click the thumbnail to watch the full demo.*
+Watch the video demo: [RealSignal Demo](https://youtu.be/zqPcyIgDgqU)
 
 **Landing Page**
 ![Landing Page](assets/landing-page.png)
