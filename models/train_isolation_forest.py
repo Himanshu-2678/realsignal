@@ -1,3 +1,4 @@
+import argparse
 import joblib
 import mlflow
 import mlflow.sklearn
@@ -13,10 +14,33 @@ from sklearn.metrics import (
     accuracy_score,
 )
 
-from settings import MODEL_PATH, N_ESTIMATORS, CONTAMINATION
+from settings import (
+    MODEL_PATH,
+    N_ESTIMATORS,
+    CONTAMINATION,
+)
 
-TRAIN_DATASET_PATH = "dataset/processed/transactions_dataset.csv"
-EVAL_DATASET_PATH = "dataset/processed/current_transactions.csv"
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "--train_data",
+    type=str,
+    required=True,
+)
+
+parser.add_argument(
+    "--eval_data",
+    type=str,
+    required=True,
+)
+
+args = parser.parse_args()
+
+TRAIN_DATASET_PATH = args.train_data
+
+EVAL_DATASET_PATH = args.eval_data
+
 
 FEATURE_COLUMNS = [
     "amount",
@@ -29,6 +53,10 @@ train_df = pd.read_csv(TRAIN_DATASET_PATH)
 eval_df = pd.read_csv(EVAL_DATASET_PATH)
 
 X_train = train_df[FEATURE_COLUMNS]
+
+print("\nFeature Statistics:\n")
+print(X_train.describe())
+
 X_eval = eval_df[FEATURE_COLUMNS]
 y_true = eval_df["is_fraud"].astype(int)
 
