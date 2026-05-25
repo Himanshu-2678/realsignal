@@ -4,16 +4,19 @@
 
 RealSignal is a streaming-first anomaly detection system built for real-time fraud monitoring, operational observability, and adaptive ML lifecycle management. The project simulates how production fraud monitoring infrastructure behaves in real-world ML systems environments — prioritizing operational engineering over benchmark chasing.
 
-## Why This Project Exists
+## System Overview
 
-Most ML projects stop at training a model. RealSignal explores what happens after — how models are served, monitored, and maintained over time.
+RealSignal is designed to simulate the operational lifecycle of a real-time anomaly detection system deployed in streaming environments.
 
-The focus is on:
-- streaming inference at low latency
-- detecting when the model starts degrading
-- automatically retraining when distributions shift
-- making predictions explainable to non-technical stakeholders
-- building systems that fail gracefully, not silently
+The system focuses on:
+- low-latency streaming inference
+- online behavioral feature engineering
+- anomaly detection under shifting distributions
+- explainable operational predictions
+- drift-aware adaptive retraining
+- ML observability and lifecycle tracking
+
+Rather than optimizing only for offline evaluation metrics, the project emphasizes production-oriented ML systems behavior including monitoring, maintainability, operational reliability, and retraining workflows.
 
 
 
@@ -54,7 +57,15 @@ Watch the video demo: [RealSignal Demo](https://youtu.be/zqPcyIgDgqU)
 ![MLflow Tracking](assets/mlflow.png)
 
 
-## Core Features
+## Key Operational Metrics
+
+- Processed and monitored 5000+ streaming transaction events using Kafka-driven online feature engineering pipelines
+- Reduced false positive anomaly predictions by 97% (1261 → 36) through feature distribution stabilization and contamination threshold tuning
+- Implemented PSI-based drift monitoring across 4 behavioral features with adaptive retraining workflows
+- Integrated MLflow lifecycle tracking for experiment monitoring, evaluation artifacts, and retraining visibility
+
+
+## Operational Capabilities
 
 ### Streaming Inference
 Kafka-based producer-consumer pipeline for real-time transaction processing with event-driven inference.
@@ -75,7 +86,7 @@ Rule-based signal explanations attached to every prediction:
 - `high_average_transaction_amount`
 - `high_merchant_diversity`
 
-Intentionally lightweight to keep inference latency low. No SHAP overhead.
+Designed intentionally for low-latency streaming inference without introducing computationally expensive attribution methods.
 
 ### Drift Detection
 Population Stability Index (PSI) monitors feature distribution shifts across windows:
@@ -138,6 +149,8 @@ realsignal/
 │   └── processed/
 ├── evaluation/
 ├── utils/
+├── experiments/
+│   └── autoencoder_comparison.ipynb
 └── requirements.txt
 ```
 
@@ -254,6 +267,17 @@ SHAP adds significant per-inference compute overhead. In a streaming system proc
 PSI is well-understood in financial services, lightweight to compute, and interpretable without statistical background. It fits the streaming context better than more complex distribution tests.
 
 
+## Architecture Evaluation
+
+An experimental comparison between Isolation Forest and a lightweight PyTorch AutoEncoder was conducted to evaluate:
+- inference latency
+- operational complexity
+- preprocessing overhead
+- deployment suitability
+- retraining maintainability
+
+Although the AutoEncoder achieved lower raw inference latency in isolated benchmarks, Isolation Forest remained the preferred production choice due to lower operational complexity, simpler retraining workflows, and lightweight deployment requirements.
+
 
 ## Known Limitations
 
@@ -268,4 +292,6 @@ These are acknowledged tradeoffs, not oversights.
 
 ## License
 
-MIT License. See `LICENSE` for details.
+This project is licensed under the MIT License. You are free to use, modify, and distribute this software with proper attribution.
+
+See the [MIT License](LICENSE) file for full details.
