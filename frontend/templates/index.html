@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RealSignal - Adaptive Fraud Detection</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">RealSignal</div>
+        <div class="nav-links">
+          <a href="#about">About</a>
+          <a href="#features">Features</a>
+          <a href="#architecture">Architecture</a>
+          <a href="#demo">Demo</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+
+  <section class="hero">
+    <div class="container hero-grid">
+
+      <div>
+        <div class="tag">Adaptive Real-Time Fraud Detection</div>
+        <h1>Detect.<br>Monitor.<br>Retrain.</h1>
+        <p>
+          A fault-tolerant streaming anomaly detection platform built for
+          real-time fraud monitoring — with Kafka, MLflow, drift detection,
+          and adaptive retraining pipelines.
+        </p>
+        <div class="buttons">
+          <a href="#features" class="btn btn-primary">Explore System</a>
+          <a href="#demo" class="btn btn-secondary">Simulate Transaction</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <h3>Operational Status</h3>
+        <div class="metric"><span>Streaming Pipeline</span><span class="status">Active</span></div>
+        <div class="metric"><span>Drift Monitoring</span><span class="status">Enabled</span></div>
+        <div class="metric"><span>Retraining Pipeline</span><span class="status">Operational</span></div>
+        <div class="metric"><span>MLflow Tracking</span><span class="status">Connected</span></div>
+        <div class="metric"><span>DLQ Reliability</span><span class="status">Healthy</span></div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section id="about">
+    <div class="container">
+      <div class="section-label">Overview</div>
+      <h2 class="section-title">What is RealSignal?</h2>
+      <p class="section-subtitle">
+        RealSignal is a streaming-first anomaly detection system focused on
+        operational reliability, lifecycle monitoring, and adaptive ML
+        infrastructure — not just model training.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-number">01</div>
+          <h3>Streaming Inference</h3>
+          <p>Kafka-driven real-time transaction processing with online feature engineering and low-latency anomaly detection.</p>
+        </div>
+        <div class="card">
+          <div class="card-number">02</div>
+          <h3>Fault Tolerance</h3>
+          <p>Dead Letter Queue handling isolates malformed events and prevents consumer crashes during inference failures.</p>
+        </div>
+        <div class="card">
+          <div class="card-number">03</div>
+          <h3>Adaptive Monitoring</h3>
+          <p>PSI-based drift detection continuously monitors changing transaction distributions and model degradation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="features">
+    <div class="container">
+      <div class="section-label">Capabilities</div>
+      <h2 class="section-title">Core System Features</h2>
+      <p class="section-subtitle">
+        Complete ML lifecycle orchestration with full operational observability
+        at every stage of the pipeline.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-number">F1</div>
+          <h3>Online Feature Engineering</h3>
+          <p>Velocity tracking, merchant diversity analysis, and rolling customer transaction statistics.</p>
+        </div>
+        <div class="card">
+          <div class="card-number">F2</div>
+          <h3>Explainability Layer</h3>
+          <p>Rule-based anomaly explanations provide interpretable reasoning behind fraud predictions.</p>
+        </div>
+        <div class="card">
+          <div class="card-number">F3</div>
+          <h3>MLflow Lifecycle Tracking</h3>
+          <p>Experiment tracking, metric logging, drift reports, and retraining lifecycle management.</p>
+        </div>
+        <div class="card">
+          <div class="card-number">F4</div>
+          <h3>Adaptive Retraining</h3>
+          <p>Significant feature drift automatically triggers retraining on updated transaction distributions.</p>
+        </div>
+        <div class="card">
+          <div class="card-number">F5</div>
+          <h3>Operational Metrics API</h3>
+          <p>FastAPI endpoints expose health checks, drift reports, and lifecycle observability.</p>
+        </div>
+        <div class="card">
+          <div class="card-number">F6</div>
+          <h3>Monitoring Infrastructure</h3>
+          <p>Drift monitoring and evaluation artifacts help identify model degradation over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="architecture">
+    <div class="container">
+      <div class="section-label">Design</div>
+      <h2 class="section-title">System Architecture</h2>
+      <p class="section-subtitle">
+        Streaming-first architecture focused on reliability, monitoring,
+        and adaptive retraining workflows.
+      </p>
+
+      <div class="architecture">
+        <div class="arch-label">Ingestion &amp; Processing</div>
+        <div class="flow">
+          <div class="flow-box">Transaction Generator</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">Kafka Producer</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">Streaming Consumer</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">Feature Pipeline</div>
+        </div>
+
+        <div class="arch-label" style="margin-top:32px;">Detection &amp; Lifecycle</div>
+        <div class="flow">
+          <div class="flow-box">Isolation Forest</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">Drift Detection</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">Retraining Pipeline</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">MLflow Tracking</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="demo">
+    <div class="container">
+      <div class="section-label">Interactive</div>
+      <h2 class="section-title">Transaction Analyzer</h2>
+      <p class="section-subtitle">
+        Simulate transaction behavior and observe real-time anomaly detection
+        with explainability signals.
+      </p>
+
+      <div class="demo-grid">
+
+        <div class="demo-card">
+
+          <div class="input-group">
+            <label>Transaction Amount</label>
+            <input type="number" id="amount" placeholder="25000">
+          </div>
+
+          <div class="input-group">
+            <label>Transaction Velocity</label>
+            <input type="number" id="velocity" placeholder="8">
+          </div>
+
+          <div class="input-group">
+            <label>Average Transaction Amount</label>
+            <input type="number" id="avg_amount" placeholder="18000">
+          </div>
+
+          <div class="input-group">
+            <label>Merchant Diversity</label>
+            <input type="number" id="merchant_diversity" placeholder="5">
+          </div>
+
+          <button class="predict-btn" onclick="predictTransaction()">
+            Analyze Transaction
+          </button>
+
+          <div class="sample-inputs">
+            <h4>Suggested Test Inputs</h4>
+            <div class="sample-box">
+              <h5>Normal Transaction</h5>
+              <p>Amount: 1500<br>Velocity: 20<br>Avg Amount: 4500<br>Merchant Diversity: 3</p>
+            </div>
+            <div class="sample-box anomaly-sample">
+              <h5>Anomaly Transaction</h5>
+              <p>Amount: 90000<br>Velocity: 20<br>Avg Amount: 40000<br>Merchant Diversity: 4</p>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="result-card">
+          <h3>Prediction Result</h3>
+
+          <div id="prediction-result">
+            <div class="model-note">
+              <h4>Model Behavior</h4>
+              <p>
+                Isolation Forest identifies anomalies based on statistical
+                rarity and density patterns learned from training data.
+              </p>
+              <p>
+                Transactions that fall outside learned feature distributions
+                may be flagged as anomalous even if they appear normal to humans.
+              </p>
+            </div>
+            <p class="placeholder" style="margin-top: 20px;">
+              Run a transaction analysis to view results.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">RealSignal</div>
+        <div class="footer-note">Adaptive Streaming ML System</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/script.js"></script>
+
+</body>
+</html>
