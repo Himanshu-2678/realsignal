@@ -28,11 +28,7 @@ venv/
 logs/
 *.log
 
-# -------------------------
-# Model Artifacts
-# -------------------------
 
-models/registry/*.pkl
 
 # Keep metadata tracked
 !models/registry/metadata.json
