@@ -2,45 +2,32 @@
 
 **Adaptive Real-Time Fraud Detection & ML Monitoring System**
 
-RealSignal is a streaming-first anomaly detection system built for real-time fraud monitoring, operational observability, and adaptive ML lifecycle management. The project simulates how production fraud monitoring infrastructure behaves in real-world ML systems environments — prioritizing operational engineering over benchmark chasing.
+RealSignal is a streaming-first anomaly detection system built for real-time fraud monitoring, operational observability, and adaptive ML lifecycle management. The project simulates how production fraud monitoring infrastructure behaves in real-world ML systems environments.
+
+## Live Demo
+
+http://realsignalml.duckdns.org
+
 
 ## System Overview
 
-RealSignal is designed to simulate the operational lifecycle of a real-time anomaly detection system deployed in streaming environments.
+RealSignal is a production-oriented ML systems project that simulates real-time fraud monitoring infrastructure using streaming inference, online feature engineering, anomaly detection, drift monitoring, and adaptive retraining workflows.
 
-The system focuses on:
-- low-latency streaming inference
+The system is designed to reflect operational ML behavior under continuously evolving transaction distributions rather than focusing purely on offline model evaluation.
+
+Core system capabilities include:
+- real-time streaming inference
 - online behavioral feature engineering
-- anomaly detection under shifting distributions
-- explainable operational predictions
-- drift-aware adaptive retraining
-- ML observability and lifecycle tracking
-
-Rather than optimizing only for offline evaluation metrics, the project emphasizes production-oriented ML systems behavior including monitoring, maintainability, operational reliability, and retraining workflows.
-
+- anomaly detection using Isolation Forest
+- PSI-based drift monitoring
+- adaptive retraining workflows
+- ML lifecycle observability using MLflow
+- containerized cloud deployment on AWS
 
 
 ## System Architecture
 
-```
-Transaction Generator
-        ↓
-Kafka Producer
-        ↓
-Kafka Consumer
-        ↓
-Online Feature Engineering
-        ↓
-Isolation Forest Inference
-        ↓
-Explainability Layer
-        ↓
-Drift Detection (PSI)
-        ↓
-Adaptive Retraining Pipeline
-        ↓
-MLflow Lifecycle Tracking
-```
+![Architecture Diagram](assets/architecture.png)
 
 
 ## Demo
@@ -59,68 +46,75 @@ Watch the video demo: [RealSignal Demo](https://youtu.be/zqPcyIgDgqU)
 
 ## Key Operational Metrics
 
-- Processed and monitored 5000+ streaming transaction events using Kafka-driven online feature engineering pipelines
-- Reduced false positive anomaly predictions by 97% (1261 → 36) through feature distribution stabilization and contamination threshold tuning
-- Implemented PSI-based drift monitoring across 4 behavioral features with adaptive retraining workflows
-- Integrated MLflow lifecycle tracking for experiment monitoring, evaluation artifacts, and retraining visibility
+- Processed and monitored 5000+ streaming transaction events through Kafka-driven online feature engineering pipelines
+- Reduced false positive anomaly predictions from 1261 to 36 through iterative feature distribution stabilization and contamination threshold refinement
+- Implemented PSI-based drift monitoring across behavioral transaction features with adaptive retraining workflows
+- Integrated MLflow lifecycle tracking for experiment logging, drift artifacts, and retraining observability
 
 
 ## Operational Capabilities
 
 ### Streaming Inference
-Kafka-based producer-consumer pipeline for real-time transaction processing with event-driven inference.
+Kafka-based producer-consumer pipeline for event-driven real-time transaction inference.
 
 ### Online Feature Engineering
-Behavioral features computed dynamically per transaction:
-- Transaction velocity (1-minute window)
-- Average transaction amount (1-minute window)
-- Merchant diversity (1-minute window)
+Behavioral features computed dynamically during inference:
+- transaction velocity
+- rolling average transaction amount
+- merchant diversity
 
 ### Anomaly Detection
-Isolation Forest model trained on behavioral transaction distributions. Classifies transactions as `normal` or `anomaly` based on statistical density patterns — not hardcoded rules.
+Isolation Forest identifies statistically rare behavioral patterns using density-based anomaly isolation rather than rule-based fraud heuristics.
 
 ### Explainability Layer
-Rule-based signal explanations attached to every prediction:
-- `high_transaction_velocity`
-- `large_transaction_amount`
-- `high_average_transaction_amount`
-- `high_merchant_diversity`
-
-Designed intentionally for low-latency streaming inference without introducing computationally expensive attribution methods.
+Lightweight rule-based explainability signals provide operational reasoning without introducing high-latency attribution overhead.
 
 ### Drift Detection
-Population Stability Index (PSI) monitors feature distribution shifts across windows:
-
-| PSI Range | Status |
-|---|---|
-| < 0.1 | Stable |
-| 0.1 – 0.2 | Moderate Drift |
-| > 0.2 | Significant Drift |
+Population Stability Index (PSI) monitors behavioral feature distribution shifts across streaming windows.
 
 ### Adaptive Retraining
-Significant drift automatically triggers the retraining pipeline — no manual intervention required.
+Significant feature drift automatically triggers retraining workflows to maintain inference stability.
 
-### MLflow Tracking
-Full lifecycle visibility: experiment tracking, metric logging, drift reports, retraining artifacts.
+### MLflow Observability
+MLflow tracks experiments, evaluation artifacts, drift reports, and retraining metadata.
 
 ### Fault Tolerance
-Dead Letter Queue (DLQ) isolates malformed events. Consumer crashes are prevented; failed messages are logged separately for inspection.
-
+Malformed streaming events are isolated through Dead Letter Queue (DLQ) handling to prevent consumer failures.
 
 
 ## Technology Stack
 
-| Component | Technology |
+| Layer | Technology |
 |---|---|
 | Backend API | FastAPI |
 | Streaming | Apache Kafka |
-| ML Model | Isolation Forest (scikit-learn) |
-| Deep Learning | AutoEncoder (Pytorch) |
+| ML Model | Isolation Forest |
+| Experimental Evaluation | PyTorch AutoEncoder |
+| Drift Monitoring | PSI |
 | Experiment Tracking | MLflow |
-| Frontend | HTML / CSS / JavaScript |
+| Frontend | HTML, CSS, JavaScript |
+| Containerization | Docker |
+| Reverse Proxy | Nginx |
+| Cloud Deployment | AWS EC2 |
+| CI/CD | GitHub Actions |
+| Domain Routing | DuckDNS |
 | Data Processing | Pandas |
 | Model Persistence | Joblib |
-| Drift Monitoring | PSI (custom implementation) |
+
+
+## Deployment Architecture
+
+RealSignal is deployed as a containerized inference service on AWS EC2 using Nginx reverse proxying for production-style request routing.
+
+Deployment components:
+- Docker containerized FastAPI inference server
+- Nginx reverse proxy on port 80
+- AWS EC2 cloud hosting
+- DuckDNS domain routing
+- GitHub Actions CI validation pipeline
+
+Public Endpoint:
+http://realsignalml.duckdns.org
 
 
 
@@ -252,7 +246,9 @@ Content-Type: application/json
 | Recall | 26% |
 | F1 Score | 0.37 |
 
-The precision-recall tradeoff here is intentional. Isolation Forest is optimized for catching rare behavioral anomalies, not maximizing F1. In production fraud systems, a low recall model with high precision is often preferred to reduce false positive fatigue for analysts.
+The system intentionally prioritizes high precision anomaly isolation over aggressive anomaly recall. In operational fraud monitoring systems, excessive false positives introduce analyst fatigue and reduce investigation efficiency.
+
+Since RealSignal uses unsupervised anomaly detection without confirmed fraud labels, evaluation metrics should be interpreted as operational anomaly prioritization signals rather than traditional supervised classification performance.
 
 
 
@@ -279,6 +275,26 @@ An experimental comparison between Isolation Forest and a lightweight PyTorch Au
 
 Although the AutoEncoder achieved lower raw inference latency in isolated benchmarks, Isolation Forest remained the preferred production choice due to lower operational complexity, simpler retraining workflows, and lightweight deployment requirements.
 
+## CI/CD Pipeline
+
+GitHub Actions validates:
+- dependency installation
+- import integrity
+- model training workflows
+- Docker image builds
+
+This ensures deployment reproducibility and infrastructure consistency across environments.
+
+## Production Deployment Challenges
+
+The deployment process surfaced several operational issues commonly encountered in production ML systems:
+
+- Docker container startup failures due to missing logging directories
+- Model artifact persistence issues during containerized deployment
+- Security group misconfigurations affecting external accessibility
+- Reverse proxy configuration and public routing setup using Nginx
+
+These deployment issues were intentionally resolved as part of the operationalization process rather than abstracted away.
 
 ## Known Limitations
 
